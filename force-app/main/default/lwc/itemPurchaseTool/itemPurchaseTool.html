@@ -1,0 +1,14 @@
+<template>
+    <lightning-card title="Item Purchase Tool">
+        <div class="slds-p-around_medium">
+            <template if:true={items}>
+                <template for:each={items} for:item="item">
+                    <p key={item.Id}>{item.Name}</p>
+                </template>
+            </template>
+            <template if:false={items}>
+                <p>No items found.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>
