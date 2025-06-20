@@ -1,42 +1,72 @@
 <template>
-    <lightning-card title="Item Purchase Tool">
-        <div class="slds-p-around_medium">
-            <template if:true={items}>
-                <div class="slds-grid slds-wrap">
-                    <template for:each={items} for:item="item">
-                        <div key={item.Id} class="slds-col slds-size_1-of-2 slds-p-around_small">
-                            <div class="slds-card">
-                                <article class="slds-card__body slds-p-around_medium">
-                                    <div class="slds-grid slds-grid_vertical-align-center">
-                                        <div class="slds-col slds-size_1-of-3">
-                                            <img src={item.Image__c} alt={item.Name} if:true={item.Image__c} class="slds-image" />
-                                            <div if:false={item.Image__c} class="slds-box slds-text-align_center">No Image</div>
-                                        </div>
-                                        <div class="slds-col slds-size_2-of-3 slds-p-left_small">
-                                            <h2 class="slds-text-heading_medium">{item.Name}</h2>
-                                            <p class="slds-truncate">{item.Description__c}</p>
-                                            <p class="slds-text-title_bold">Price: ${item.Price__c}</p>
-                                            <div class="slds-m-top_small">
-                                                <lightning-button label="Details" variant="neutral" class="slds-m-right_x-small"></lightning-button>
-                                                <lightning-button
-                                                    label="Add"
-                                                    variant="brand"
-                                                    data-id={item.Id}
-                                                    onclick={handleAddToCart}>
-                                                </lightning-button>
-                                                <div style="clear: both;"></div>
+    <lightning-card>
+        <!-- HEADER -->
+        <div class="slds-grid slds-p-around_medium slds-border_bottom">
+            <lightning-button label="Create Item" variant="brand" class="slds-m-right_medium"></lightning-button>
+            <div class="slds-text-title slds-m-right_medium">Account Name: Example Inc</div>
+            <div class="slds-text-title slds-m-right_medium">Account Number: 00123</div>
+            <div class="slds-text-title slds-m-right_auto">Industry: Retail</div>
+            <lightning-button label="Cart" variant="neutral"></lightning-button>
+        </div>
+
+        <!-- MAIN BODY -->
+        <div class="slds-grid slds-p-around_medium">
+            <!-- ITEM GRID -->
+            <div class="slds-size_3-of-4">
+                <div class="slds-m-bottom_medium">
+                    <lightning-input label="Search" placeholder="Search by name or description"></lightning-input>
+                </div>
+
+                <template if:true={items}>
+                    <div class="slds-grid slds-wrap">
+                        <template for:each={items} for:item="item">
+                            <div key={item.Id} class="slds-col slds-size_1-of-2 slds-p-around_small">
+                                <div class="slds-card">
+                                    <article class="slds-card__body slds-p-around_medium">
+                                        <div class="slds-grid slds-grid_vertical-align-center">
+                                            <div class="slds-col slds-size_1-of-3">
+                                                <img src={item.Image__c} alt={item.Name} if:true={item.Image__c} class="slds-image" />
+                                                <div if:false={item.Image__c} class="slds-box slds-text-align_center">No Image</div>
+                                            </div>
+                                            <div class="slds-col slds-size_2-of-3 slds-p-left_small">
+                                                <h2 class="slds-text-heading_medium">{item.Name}</h2>
+                                                <p class="slds-truncate">{item.Description__c}</p>
+                                                <p class="slds-text-title_bold">Price: ${item.Price__c}</p>
+                                                <div class="slds-m-top_small">
+                                                    <lightning-button label="Details" variant="neutral" class="slds-m-right_x-small"></lightning-button>
+                                                    <lightning-button label="Add" variant="brand" data-id={item.Id} onclick={handleAddToCart}></lightning-button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </article>
+                                    </article>
+                                </div>
                             </div>
-                        </div>
-                    </template>
-                </div>
-            </template>
-            <template if:false={items}>
-                <p>No items found.</p>
-            </template>
+                        </template>
+                    </div>
+                </template>
+                <template if:false={items}>
+                    <p class="slds-text-color_error">No items found.</p>
+                </template>
+            </div>
+
+            <!-- FILTERS -->
+            <div class="slds-size_1-of-4 slds-p-right_medium slds-border_right">
+                <div class="slds-text-title_bold slds-m-bottom_x-small">Type</div>
+                <ul class="slds-list_dotted slds-m-bottom_medium">
+                    <li>Type 1</li>
+                    <li>Type 2</li>
+                    <li>Type 3</li>
+                    <li>Type 4</li>
+                </ul>
+
+                <div class="slds-text-title_bold slds-m-bottom_x-small">Family</div>
+                <ul class="slds-list_dotted">
+                    <li>Family 1</li>
+                    <li>Family 2</li>
+                    <li>Family 3</li>
+                    <li>Family 4</li>
+                </ul>
+            </div>
         </div>
     </lightning-card>
 </template>
