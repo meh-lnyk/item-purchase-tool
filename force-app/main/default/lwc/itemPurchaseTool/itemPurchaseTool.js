@@ -3,6 +3,7 @@ import getItems from '@salesforce/apex/ItemService.getItems';
 
 export default class ItemPurchaseTool extends LightningElement {
     @track items = [];
+    @track cart = [];
 
     connectedCallback() {
         getItems()
@@ -15,6 +16,12 @@ export default class ItemPurchaseTool extends LightningElement {
     }
 
     handleAddToCart(event) {
-        console.log('Add to cart clicked');
+        const itemId = event.target.dataset.id;
+        const selectedItem = this.items.find(item => item.Id === itemId);
+
+        if (selectedItem) {
+            this.cart.push(selectedItem);
+            console.log('Cart updated:', this.cart);
+        }
     }
 }

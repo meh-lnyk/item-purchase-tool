@@ -18,7 +18,13 @@
                                             <p class="slds-text-title_bold">Price: ${item.Price__c}</p>
                                             <div class="slds-m-top_small">
                                                 <lightning-button label="Details" variant="neutral" class="slds-m-right_x-small"></lightning-button>
-                                                <lightning-button label="Add" variant="brand" onclick={handleAddToCart}></lightning-button>
+                                                <lightning-button
+                                                    label="Add"
+                                                    variant="brand"
+                                                    data-id={item.Id}
+                                                    onclick={handleAddToCart}>
+                                                </lightning-button>
+                                                <div style="clear: both;"></div>
                                             </div>
                                         </div>
                                     </div>
