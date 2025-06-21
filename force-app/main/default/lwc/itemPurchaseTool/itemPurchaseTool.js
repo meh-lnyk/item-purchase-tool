@@ -4,6 +4,7 @@ import getItems from '@salesforce/apex/ItemService.getItems';
 export default class ItemPurchaseTool extends LightningElement {
     @track items = [];
     @track cart = [];
+    @track isCartModalOpen = false;
 
     connectedCallback() {
         getItems()
@@ -23,5 +24,13 @@ export default class ItemPurchaseTool extends LightningElement {
             this.cart.push(selectedItem);
             console.log('Cart updated:', this.cart);
         }
+    }
+
+    openCart() {
+        this.isCartModalOpen = true;
+    }
+
+    closeCart() {
+        this.isCartModalOpen = false;
     }
 }
