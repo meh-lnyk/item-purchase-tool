@@ -63,24 +63,25 @@
             <!-- FILTERS -->
             <div class="slds-size_1-of-4 slds-p-right_medium slds-border_right">
                 <div class="slds-text-title_bold slds-m-bottom_x-small">Type</div>
-                <ul class="slds-list_dotted slds-m-bottom_medium">
-                    <li>Type 1</li>
-                    <li>Type 2</li>
-                    <li>Type 3</li>
-                    <li>Type 4</li>
-                </ul>
+                <template if:true={filters.type}>
+                    <ul class="slds-list_dotted">
+                        <template for:each={filters.type} for:item="type">
+                            <li key={type}>{type}</li>
+                        </template>
+                    </ul>
+                </template>
 
-            <div class="slds-text-title_bold slds-m-bottom_x-small">Family</div>
-            <template if:true={families}>
-                <ul class="slds-list_dotted">
-                    <template for:each={families} for:item="fam">
-                        <li key={fam}>{fam}</li>
-                    </template>
-                </ul>
-            </template>
-            <template if:false={families}>
-                <p>No families found.</p>
-            </template>
+                <div class="slds-text-title_bold slds-m-bottom_x-small">Family</div>
+                <template if:true={families}>
+                    <ul class="slds-list_dotted">
+                        <template for:each={families} for:item="fam">
+                            <li key={fam}>{fam}</li>
+                        </template>
+                    </ul>
+                </template>
+                <template if:false={families}>
+                    <p>No families found.</p>
+                </template>
             </div>
         </div>
     </lightning-card>

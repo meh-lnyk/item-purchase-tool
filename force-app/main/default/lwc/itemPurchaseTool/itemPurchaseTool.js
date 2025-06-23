@@ -12,6 +12,7 @@ export default class ItemPurchaseTool extends LightningElement {
     @track families = [];
     @track showCart = false;
     @track account = null;
+    @track types = [];
     accountId;
 
     @wire(CurrentPageReference)
@@ -35,11 +36,19 @@ export default class ItemPurchaseTool extends LightningElement {
     fetchItems() {
         getItems()
             .then(result => {
-                this.items = result;
-                this.filteredItems = [...this.items];
+            this.items = result;
+            this.filteredItems = [...this.items];
+
+            const typeSet = new Set();
+            this.items.forEach(item => {
+                if (item.Type__c) {
+                typeSet.add(item.Type__c);
+                }
+            });
+            this.filters.type = [...typeSet];
             })
             .catch(error => {
-                console.error('Error fetching items:', error);
+            console.error('Error fetching items:', error);
             });
     }
 
@@ -68,6 +77,17 @@ export default class ItemPurchaseTool extends LightningElement {
             })
             .catch(error => {
                 console.error('Error fetching families:', error);
+            });
+    }
+
+    loadTypes() {
+        getItemTypes()
+            .then(result => {
+                console.log('Fetched types:', result);
+                this.types = result;
+            })
+            .catch(error => {
+                console.error('Error fetching types:', error);
             });
     }
 
