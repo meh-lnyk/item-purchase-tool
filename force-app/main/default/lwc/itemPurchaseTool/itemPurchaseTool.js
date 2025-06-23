@@ -29,7 +29,6 @@ export default class ItemPurchaseTool extends LightningElement {
         }
     }
 
-
     connectedCallback() {
         console.log('connectedCallback triggered');
         this.fetchItems();
@@ -51,7 +50,7 @@ export default class ItemPurchaseTool extends LightningElement {
             this.filters.type = [...typeSet];
             })
             .catch(error => {
-            console.error('Error fetching items:', error);
+                console.error('Error loading account info:', JSON.stringify(error));
             });
     }
 
