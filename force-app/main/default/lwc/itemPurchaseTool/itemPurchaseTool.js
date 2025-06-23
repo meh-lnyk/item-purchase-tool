@@ -115,4 +115,13 @@ export default class ItemPurchaseTool extends LightningElement {
             return matchType && matchFamily;
         });
     }
+
+    handleSearch(event) {
+        const query = event.target.value.toLowerCase();
+        this.filteredItems = this.items.filter(item => {
+            const name = item.Name?.toLowerCase() || '';
+            const desc = item.Description__c?.toLowerCase() || '';
+            return name.includes(query) || desc.includes(query);
+        });
+    }
 }

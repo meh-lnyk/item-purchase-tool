@@ -25,12 +25,12 @@
             <!-- ITEM GRID -->
             <div class="slds-size_3-of-4">
                 <div class="slds-m-bottom_medium">
-                    <lightning-input label="Search" placeholder="Search by name or description"></lightning-input>
+                    <lightning-input label="Search" placeholder="Search by name or description" onchange={handleSearch}></lightning-input>
                 </div>
 
-                <template if:true={items}>
+                <template if:true={filteredItems}>
                     <div class="slds-grid slds-wrap">
-                        <template for:each={items} for:item="item">
+                        <template for:each={filteredItems} for:item="item">
                             <div key={item.Id} class="slds-col slds-size_1-of-2 slds-p-around_small">
                                 <div class="slds-card">
                                     <article class="slds-card__body slds-p-around_medium">
@@ -55,7 +55,7 @@
                         </template>
                     </div>
                 </template>
-                <template if:false={items}>
+                <template if:false={filteredItems}>
                     <p class="slds-text-color_error">No items found.</p>
                 </template>
             </div>
