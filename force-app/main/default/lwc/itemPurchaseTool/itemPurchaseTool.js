@@ -3,6 +3,7 @@ import { CurrentPageReference } from 'lightning/navigation';
 import getItems from '@salesforce/apex/ItemService.getItems';
 import getAccountInfo from '@salesforce/apex/ItemService.getAccountInfo';
 import getItemFamilies from '@salesforce/apex/ItemService.getItemFamilies';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class ItemPurchaseTool extends LightningElement {
     @track items = [];
@@ -101,11 +102,18 @@ export default class ItemPurchaseTool extends LightningElement {
         this.showCart = false;
     }
 
-    addToCart(event) {
-        const itemId = event.detail;
+    handleAddToCart(event) {
+        const itemId = event.target.dataset.id;
         const item = this.items.find(i => i.Id === itemId);
         if (item && !this.cart.includes(item)) {
             this.cart = [...this.cart, item];
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Success',
+                    message: `${item.Name} added to cart`,
+                    variant: 'success'
+                })
+            );
         }
     }
 
