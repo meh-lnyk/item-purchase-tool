@@ -8,4 +8,18 @@ public with sharing class ItemService {
             LIMIT 50
         ];
     }
+
+    @AuraEnabled(cacheable=true)
+    public static Account getAccountInfo(Id accountId) {
+        List<Account> accounts = [
+            SELECT Id, Name, AccountNumber, Industry
+            FROM Account
+            WHERE Id = :accountId
+            LIMIT 1
+        ];
+        if (!accounts.isEmpty()) {
+            return accounts[0];
+        }
+        return null;
+    }
 }

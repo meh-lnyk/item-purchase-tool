@@ -3,14 +3,25 @@
         <!-- HEADER -->
         <div class="slds-grid slds-p-around_medium slds-border_bottom">
             <lightning-button label="Create Item" variant="brand" class="slds-m-right_medium"></lightning-button>
-            <div class="slds-text-title slds-m-right_medium">Account Name: Example Inc</div>
-            <div class="slds-text-title slds-m-right_medium">Account Number: 00123</div>
-            <div class="slds-text-title slds-m-right_auto">Industry: Retail</div>
+            <template if:true={account}>
+                <div class="slds-text-title slds-m-right_medium">Account Name: {account.Name}</div>
+                <div class="slds-text-title slds-m-right_medium">Account Number: {account.AccountNumber}</div>
+                <div class="slds-text-title slds-m-right_auto">Industry: {account.Industry}</div>
+            </template>
             <lightning-button label="Cart" variant="neutral" onclick={openCart}></lightning-button>
         </div>
 
         <!-- MAIN BODY -->
         <div class="slds-grid slds-p-around_medium">
+            <!-- ACCOUNT INFO BAR -->
+            <template if:true={account}>
+                <div class="slds-box slds-theme_default slds-m-bottom_medium">
+                    <p><strong>Account Name:</strong> {account.Name}</p>
+                    <p><strong>Account Number:</strong> {account.AccountNumber}</p>
+                    <p><strong>Industry:</strong> {account.Industry}</p>
+                </div>
+            </template>
+
             <!-- ITEM GRID -->
             <div class="slds-size_3-of-4">
                 <div class="slds-m-bottom_medium">
