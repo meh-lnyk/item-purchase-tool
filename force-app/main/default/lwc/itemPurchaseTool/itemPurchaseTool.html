@@ -121,20 +121,25 @@
                 <!-- Modal Footer -->
                 <footer class="slds-modal__footer">
                     <lightning-button label="Close" onclick={closeCart}></lightning-button>
+                    <lightning-button label="Checkout" variant="brand" onclick={handleCheckout} class="slds-m-left_small"></lightning-button>
                 </footer>
             </div>
         </section>
         <div class="slds-backdrop slds-backdrop_open"></div>
     </template>
 
+
+    <!-- ITEM DETAILS MODAL -->
     <template if:true={isDetailModalOpen}>
         <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
             <div class="slds-modal__container">
+                <!-- Modal Header -->
                 <header class="slds-modal__header">
                     <h2 class="slds-text-heading_medium">Item Details</h2>
                     <lightning-button-icon icon-name="utility:close" class="slds-modal__close" onclick={closeDetailModal}></lightning-button-icon>
                 </header>
 
+                <!-- Modal Body -->
                 <div class="slds-modal__content slds-p-around_medium">
                     <template if:true={selectedItem}>
                         <img src={selectedItem.Image__c} alt={selectedItem.Name} class="slds-image slds-m-bottom_medium" />
@@ -146,6 +151,7 @@
                     </template>
                 </div>
 
+                <!-- Modal Footer -->
                 <footer class="slds-modal__footer">
                     <lightning-button label="Close" onclick={closeDetailModal}></lightning-button>
                 </footer>

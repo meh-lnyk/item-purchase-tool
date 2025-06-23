@@ -4,6 +4,7 @@ import getItems from '@salesforce/apex/ItemService.getItems';
 import getAccountInfo from '@salesforce/apex/ItemService.getAccountInfo';
 import getItemFamilies from '@salesforce/apex/ItemService.getItemFamilies';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import checkoutCart from '@salesforce/apex/ItemService.checkoutCart';
 
 export default class ItemPurchaseTool extends LightningElement {
     @track items = [];
@@ -146,5 +147,56 @@ export default class ItemPurchaseTool extends LightningElement {
     closeDetailModal() {
         this.isDetailModalOpen = false;
         this.selectedItem = null;
+    }
+
+    handleCheckout() {
+        if (!this.cart.length || !this.accountId) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Checkout Failed',
+                    message: 'No items in cart or account not found.',
+                    variant: 'error'
+                })
+            );
+            return;
+        }
+
+        const payload = this.cart.map(item => ({
+            itemId: item.Id,
+            unitCost: item.Price__c,
+            amount: 1
+        }));
+
+        checkoutCart({ accountId: this.accountId, items: payload })
+            .then(purchaseId => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'Purchase created',
+                        variant: 'success'
+                    })
+                );
+                this.cart = [];
+                this.showCart = false;
+                // Redirect to new Purchase record
+                this[NavigationMixin.Navigate]({
+                    type: 'standard__recordPage',
+                    attributes: {
+                        recordId: purchaseId,
+                        objectApiName: 'Purchase__c',
+                        actionName: 'view'
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Checkout error:', JSON.stringify(error));
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Checkout Failed',
+                        message: error.body?.message || 'Unknown error',
+                        variant: 'error'
+                    })
+                );
+            });
     }
 }
