@@ -70,13 +70,17 @@
                     <li>Type 4</li>
                 </ul>
 
-                <div class="slds-text-title_bold slds-m-bottom_x-small">Family</div>
+            <div class="slds-text-title_bold slds-m-bottom_x-small">Family</div>
+            <template if:true={families}>
                 <ul class="slds-list_dotted">
-                    <li>Family 1</li>
-                    <li>Family 2</li>
-                    <li>Family 3</li>
-                    <li>Family 4</li>
+                    <template for:each={families} for:item="fam">
+                        <li key={fam}>{fam}</li>
+                    </template>
                 </ul>
+            </template>
+            <template if:false={families}>
+                <p>No families found.</p>
+            </template>
             </div>
         </div>
     </lightning-card>

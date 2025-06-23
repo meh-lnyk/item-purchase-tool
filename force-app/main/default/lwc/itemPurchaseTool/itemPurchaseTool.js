@@ -2,12 +2,14 @@ import { LightningElement, wire, track } from 'lwc';
 import { CurrentPageReference } from 'lightning/navigation';
 import getItems from '@salesforce/apex/ItemService.getItems';
 import getAccountInfo from '@salesforce/apex/ItemService.getAccountInfo';
+import getItemFamilies from '@salesforce/apex/ItemService.getItemFamilies';
 
 export default class ItemPurchaseTool extends LightningElement {
     @track items = [];
     @track filteredItems = [];
     @track filters = { type: [], family: [] };
     @track cart = [];
+    @track families = [];
     @track showCart = false;
     @track account = null;
     accountId;
@@ -23,8 +25,11 @@ export default class ItemPurchaseTool extends LightningElement {
         }
     }
 
+
     connectedCallback() {
+        console.log('connectedCallback triggered');
         this.fetchItems();
+        this.loadFamilies();
     }
 
     fetchItems() {
@@ -47,6 +52,22 @@ export default class ItemPurchaseTool extends LightningElement {
             })
             .catch(error => {
                 console.error('Error loading account info:', error);
+            });
+    }
+
+    get hasAvailableFamilies() {
+        return this.families && this.families.length > 0;
+    }
+
+    loadFamilies() {
+        console.log('Calling loadFamilies...');
+        getItemFamilies()
+            .then(result => {
+                console.log('Fetched families:', result);
+                this.families = [...result];
+            })
+            .catch(error => {
+                console.error('Error fetching families:', error);
             });
     }
 

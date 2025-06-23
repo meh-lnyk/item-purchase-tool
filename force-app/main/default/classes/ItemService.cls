@@ -22,4 +22,18 @@ public with sharing class ItemService {
         }
         return null;
     }
+
+    @AuraEnabled(cacheable=true)
+    public static List<String> getItemFamilies() {
+        Set<String> families = new Set<String>();
+        for (AggregateResult ar : [
+            SELECT Family__c
+            FROM Item__c
+            WHERE Family__c != null
+            GROUP BY Family__c
+        ]) {
+            families.add((String) ar.get('Family__c'));
+        }
+        return new List<String>(families);
+    }
 }
