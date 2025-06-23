@@ -13,6 +13,8 @@ export default class ItemPurchaseTool extends LightningElement {
     @track showCart = false;
     @track account = null;
     @track types = [];
+    @track isDetailModalOpen = false;
+    @track selectedItem = null;
     accountId;
 
     @wire(CurrentPageReference)
@@ -123,5 +125,19 @@ export default class ItemPurchaseTool extends LightningElement {
             const desc = item.Description__c?.toLowerCase() || '';
             return name.includes(query) || desc.includes(query);
         });
+    }
+
+    handleViewDetails(event) {
+        const itemId = event.target.dataset.id;
+        const item = this.items.find(i => i.Id === itemId);
+        if (item) {
+            this.selectedItem = item;
+            this.isDetailModalOpen = true;
+        }
+    }
+
+    closeDetailModal() {
+        this.isDetailModalOpen = false;
+        this.selectedItem = null;
     }
 }
