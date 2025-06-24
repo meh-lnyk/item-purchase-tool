@@ -1,12 +1,13 @@
 import { LightningElement, wire, track } from 'lwc';
 import { CurrentPageReference } from 'lightning/navigation';
+import { NavigationMixin } from 'lightning/navigation';
 import getItems from '@salesforce/apex/ItemService.getItems';
 import getAccountInfo from '@salesforce/apex/ItemService.getAccountInfo';
 import getItemFamilies from '@salesforce/apex/ItemService.getItemFamilies';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import checkoutCart from '@salesforce/apex/ItemService.checkoutCart';
 
-export default class ItemPurchaseTool extends LightningElement {
+export default class ItemPurchaseTool extends NavigationMixin(LightningElement) {
     @track items = [];
     @track filteredItems = [];
     @track filters = { type: [], family: [] };
@@ -167,7 +168,14 @@ export default class ItemPurchaseTool extends LightningElement {
             amount: 1
         }));
 
-        checkoutCart({ accountId: this.accountId, items: payload })
+        const cartPayload = this.cart.map(item => ({
+            itemId: item.Id,
+            amount: 1,
+            unitCost: item.Price__c
+        }));
+        console.log('Calling checkoutCart with payload:', JSON.stringify(payload));
+        console.log('Cart:', JSON.stringify(this.cart));
+        checkoutCart({ accountId: this.accountId, items: cartPayload })
             .then(purchaseId => {
                 this.dispatchEvent(
                     new ShowToastEvent({
@@ -178,22 +186,33 @@ export default class ItemPurchaseTool extends LightningElement {
                 );
                 this.cart = [];
                 this.showCart = false;
-                // Redirect to new Purchase record
-                this[NavigationMixin.Navigate]({
-                    type: 'standard__recordPage',
-                    attributes: {
-                        recordId: purchaseId,
-                        objectApiName: 'Purchase__c',
-                        actionName: 'view'
-                    }
-                });
+                if (this[NavigationMixin.Navigate]) {
+                    this[NavigationMixin.Navigate]({
+                        type: 'standard__recordPage',
+                        attributes: {
+                            recordId: purchaseId,
+                            objectApiName: 'Purchase__c',
+                            actionName: 'view'
+                        }
+                    });
+                } else {
+                    console.warn('NavigationMixin.Navigate is not available.');
+                }
             })
             .catch(error => {
-                console.error('Checkout error:', JSON.stringify(error));
+                console.error('Checkout error (full object):', JSON.stringify(error));
+
+                let message = 'Unknown error';
+                if (error && error.body && error.body.message) {
+                    message = error.body.message;
+                } else if (error && error.message) {
+                    message = error.message;
+                }
+
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Checkout Failed',
-                        message: error.body?.message || 'Unknown error',
+                        message: message,
                         variant: 'error'
                     })
                 );

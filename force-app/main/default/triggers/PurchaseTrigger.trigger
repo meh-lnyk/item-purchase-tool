@@ -41,6 +41,7 @@ trigger PurchaseTrigger on PurchaseLine__c (after insert, after delete, after up
         ));
     }
 
+    System.debug('Updating purchases with totals: ' + purchasesToUpdate);
     if (!purchasesToUpdate.isEmpty()) {
         update purchasesToUpdate;
     }
