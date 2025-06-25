@@ -57,8 +57,15 @@
                         </div>
 
                         <footer class="slds-modal__footer">
-                            <lightning-button label="Cancel" onclick={closeCreateItemModal}></lightning-button>
-                            <lightning-button label="Create" variant="brand" onclick={createItem}></lightning-button>
+                            <lightning-button
+                                label="Cancel"
+                                onclick={closeCreateItemModal}>
+                            </lightning-button>
+                            <lightning-button
+                            label="Create"
+                            variant="brand"
+                            onclick={createItem}>
+                        </lightning-button>
                         </footer>
                     </div>
                 </section>
@@ -77,31 +84,59 @@
             <!-- ITEM GRID -->
             <div class="slds-size_3-of-4">
                 <div class="slds-m-bottom_medium">
-                    <lightning-input label="Search" placeholder="Search by name or description" onchange={handleSearch}></lightning-input>
+                    <lightning-input
+                        label="Search"
+                        placeholder="Search by name or description"
+                        onchange={handleSearch}>
+                    </lightning-input>
                 </div>
 
                 <template if:true={filteredItems}>
                     <div class="slds-grid slds-wrap">
                         <template for:each={filteredItems} for:item="item">
-                            <div key={item.Id} class="slds-col slds-size_1-of-2 slds-p-around_small">
-                                <div class="slds-card">
-                                    <article class="slds-card__body slds-p-around_medium">
-                                        <div class="slds-grid slds-grid_vertical-align-center">
-                                            <div class="slds-col slds-size_1-of-3">
-                                                <img src={item.Image__c} alt={item.Name} if:true={item.Image__c} class="custom-image" />
-                                                <div if:false={item.Image__c} class="slds-box slds-text-align_center">No Image</div>
-                                            </div>
-                                            <div class="slds-col slds-size_2-of-3 slds-p-left_small">
-                                                <h2 class="slds-text-heading_medium">{item.Name}</h2>
-                                                <p class="slds-truncate">{item.Description__c}</p>
-                                                <p class="slds-text-title_bold">Price: ${item.Price__c}</p>
-                                                <div class="slds-m-top_small">
-                                                    <lightning-button label="Details" variant="neutral" class="slds-m-right_x-small" data-id={item.Id} onclick={handleViewDetails}></lightning-button>
-                                                    <lightning-button label="Add" variant="brand" data-id={item.Id} onclick={handleAddToCart}></lightning-button>
-                                                </div>
+                            <div key={item.Id} class="slds-box slds-m-around_small item-card">
+                                <div class="image-container">
+                                    <template if:true={item.Image__c}>
+                                        <img src={item.Image__c} alt={item.Name} class="custom-image" />
+                                        <div class="item-name-overlay">{item.Name}</div>
+
+                                        <div class="action-buttons">
+                                            <lightning-button
+                                                label="Details"
+                                                variant="neutral"
+                                                data-id={item.Id}
+                                                onclick={handleViewDetails}>
+                                            </lightning-button>
+                                            <lightning-button
+                                                label="Add"
+                                                variant="brand"
+                                                data-id={item.Id}
+                                                onclick={handleAddToCart}>
+                                            </lightning-button>
+                                        </div>
+                                    </template>
+
+                                    <template if:false={item.Image__c}>
+                                        <div class="no-image">
+                                            <div class="item-name-overlay">{item.Name}</div>
+                                            <div class="no-image-text">No image</div>
+
+                                            <div class="action-buttons">
+                                                <lightning-button
+                                                    label="Details"
+                                                    variant="neutral"
+                                                    data-id={item.Id}
+                                                    onclick={handleViewDetails}>
+                                                </lightning-button>
+                                                <lightning-button
+                                                    label="Add"
+                                                    variant="brand"
+                                                    data-id={item.Id}
+                                                    onclick={handleAddToCart}>
+                                                </lightning-button>
                                             </div>
                                         </div>
-                                    </article>
+                                    </template>
                                 </div>
                             </div>
                         </template>
@@ -147,7 +182,11 @@
                 <!-- MODAL HEADER -->
                 <header class="slds-modal__header">
                     <h2 class="slds-text-heading_medium">Cart</h2>
-                    <lightning-button-icon icon-name="utility:close" class="slds-modal__close" onclick={closeCart}></lightning-button-icon>
+                    <lightning-button-icon
+                        icon-name="utility:close"
+                        class="slds-modal__close"
+                        onclick={closeCart}>
+                    </lightning-button-icon>
                 </header>
 
                 <!-- MODAL BODY -->
@@ -181,8 +220,16 @@
 
                 <!-- MODAL FOOTER -->
                 <footer class="slds-modal__footer">
-                    <lightning-button label="Close" onclick={closeCart}></lightning-button>
-                    <lightning-button label="Checkout" variant="brand" onclick={handleCheckout} class="slds-m-left_small"></lightning-button>
+                    <lightning-button
+                        label="Close"
+                        onclick={closeCart}>
+                    </lightning-button>
+                    <lightning-button
+                        label="Checkout"
+                        variant="brand"
+                        onclick={handleCheckout}
+                        class="slds-m-left_small">
+                    </lightning-button>
                 </footer>
             </div>
         </section>
@@ -197,7 +244,11 @@
                 <!-- MODAL HEADER -->
                 <header class="slds-modal__header">
                     <h2 class="slds-text-heading_medium">Item Details</h2>
-                    <lightning-button-icon icon-name="utility:close" class="slds-modal__close" onclick={closeDetailModal}></lightning-button-icon>
+                    <lightning-button-icon
+                        icon-name="utility:close"
+                        class="slds-modal__close"
+                        onclick={closeDetailModal}>
+                    </lightning-button-icon>
                 </header>
 
                 <!-- MODAL BODY -->
@@ -214,7 +265,10 @@
 
                 <!-- MODAL FOOTER -->
                 <footer class="slds-modal__footer">
-                    <lightning-button label="Close" onclick={closeDetailModal}></lightning-button>
+                    <lightning-button
+                        label="Close"
+                        onclick={closeDetailModal}>
+                    </lightning-button>
                 </footer>
             </div>
         </section>
