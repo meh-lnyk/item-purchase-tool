@@ -105,4 +105,16 @@ public with sharing class ItemService {
         System.debug('totalItems: ' + totalItems + ', grandTotal: ' + grandTotal);
         return purchase.Id;
     }
+
+    @AuraEnabled
+    public static Boolean getUserIsManager(Id userId) {
+        User u = [SELECT IsManager__c FROM User WHERE Id = :userId LIMIT 1];
+        return u.IsManager__c;
+    }
+
+    @AuraEnabled
+    public static Id createItem(Item__c item) {
+        insert item;
+        return item.Id;
+    }
 }

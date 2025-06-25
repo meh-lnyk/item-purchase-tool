@@ -6,6 +6,9 @@ import getAccountInfo from '@salesforce/apex/ItemService.getAccountInfo';
 import getItemFamilies from '@salesforce/apex/ItemService.getItemFamilies';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import checkoutCart from '@salesforce/apex/ItemService.checkoutCart';
+import USER_ID from '@salesforce/user/Id';
+import getUserIsManager from '@salesforce/apex/ItemService.getUserIsManager';
+import createItem from '@salesforce/apex/ItemService.createItem';
 
 export default class ItemPurchaseTool extends NavigationMixin(LightningElement) {
     @track items = [];
@@ -18,6 +21,17 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
     @track types = [];
     @track isDetailModalOpen = false;
     @track selectedItem = null;
+    @track isManager = false;
+    @track showCreateModal = false;
+    @track newItem = {
+        Name: '',
+        Description__c: '',
+        Type__c: '',
+        Family__c: '',
+        Price__c: null
+    };
+    @track typeOptions = [];
+    @track familyOptions = [];
     accountId;
 
     @wire(CurrentPageReference)
@@ -35,6 +49,7 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
         console.log('connectedCallback triggered');
         this.fetchItems();
         this.loadFamilies();
+        this.checkManager();
     }
 
     fetchItems() {
@@ -50,6 +65,7 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
                 }
             });
             this.filters.type = [...typeSet];
+            this.typeOptions = [...typeSet].map(type => ({ label: type, value: type }));
             })
             .catch(error => {
                 console.error('Error loading account info:', JSON.stringify(error));
@@ -78,6 +94,7 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
             .then(result => {
                 console.log('Fetched families:', result);
                 this.families = [...result];
+                this.familyOptions = result.map(fam => ({ label: fam, value: fam }));
             })
             .catch(error => {
                 console.error('Error fetching families:', error);
@@ -216,6 +233,46 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
                         variant: 'error'
                     })
                 );
+            });
+    }
+
+    checkManager() {
+        getUserIsManager({ userId: USER_ID })
+            .then(result => {
+                this.isManager = result;
+            })
+            .catch(error => {
+                console.error('Error checking manager status', error);
+            });
+    }
+
+    openCreateItemModal() {
+        this.showCreateModal = true;
+    }
+
+    closeCreateItemModal() {
+        this.showCreateModal = false;
+    }
+
+    handleItemInput(event) {
+        const field = event.target.name || event.target.dataset.field;
+        const value = event.detail?.value ?? event.target.value;
+        this.newItem = { ...this.newItem, [field]: value };
+    }
+
+    createItem() {
+        createItem({ item: this.newItem })
+            .then(() => {
+                this.dispatchEvent(new ShowToastEvent({
+                    title: 'Success',
+                    message: 'Item created',
+                    variant: 'success'
+                }));
+                this.closeCreateItemModal();
+                this.fetchItems();
+            })
+            .catch(error => {
+                console.error('Error creating item', error);
             });
     }
 }
