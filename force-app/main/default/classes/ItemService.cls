@@ -114,7 +114,13 @@ public with sharing class ItemService {
 
     @AuraEnabled
     public static Id createItem(Item__c item) {
-        insert item;
-        return item.Id;
+        try {
+            item.Image__c = UnsplashService.fetchImageUrl(item.Name);
+            insert item;
+            return item.Id;
+        } catch (Exception e) {
+            System.debug('Error creating item: ' + e.getMessage());
+            throw new AuraHandledException('Failed to create item: ' + e.getMessage());
+        }
     }
 }

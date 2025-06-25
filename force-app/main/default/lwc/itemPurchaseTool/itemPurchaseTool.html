@@ -21,8 +21,18 @@
 
                         <div class="slds-modal__content slds-p-around_medium">
                             <!-- INPUT FIELDS -->
-                            <lightning-input label="Name" value={newItem.Name} onchange={handleItemInput}></lightning-input>
-                            <lightning-input label="Description" value={newItem.Description__c} onchange={handleItemInput} data-field="Description__c"></lightning-input>
+                            <lightning-input
+                                name="Name"
+                                label="Name"
+                                value={newItem.Name}
+                                onchange={handleItemInput}>
+                            </lightning-input>
+                            <lightning-input
+                                name="Description__c"
+                                label="Description"
+                                value={newItem.Description__c}
+                                onchange={handleItemInput}>
+                            </lightning-input>
                             <lightning-combobox
                                 name="Type__c"
                                 label="Type"
@@ -30,7 +40,6 @@
                                 options={typeOptions}
                                 onchange={handleItemInput}>
                             </lightning-combobox>
-
                             <lightning-combobox
                                 name="Family__c"
                                 label="Family"
@@ -38,7 +47,13 @@
                                 options={familyOptions}
                                 onchange={handleItemInput}>
                             </lightning-combobox>
-                            <lightning-input type="number" label="Price" value={newItem.Price__c} onchange={handleItemInput} data-field="Price__c"></lightning-input>
+                            <lightning-input
+                                name="Price__c"
+                                type="number"
+                                label="Price"
+                                value={newItem.Price__c}
+                                onchange={handleItemInput}>
+                            </lightning-input>
                         </div>
 
                         <footer class="slds-modal__footer">

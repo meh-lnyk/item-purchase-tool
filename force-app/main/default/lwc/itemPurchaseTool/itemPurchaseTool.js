@@ -66,6 +66,7 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
             });
             this.filters.type = [...typeSet];
             this.typeOptions = [...typeSet].map(type => ({ label: type, value: type }));
+            console.log('Fetched items:', result);
             })
             .catch(error => {
                 console.error('Error loading account info:', JSON.stringify(error));
@@ -258,6 +259,8 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
         const field = event.target.name || event.target.dataset.field;
         const value = event.detail?.value ?? event.target.value;
         this.newItem = { ...this.newItem, [field]: value };
+
+        console.log('Updated newItem:', this.newItem);
     }
 
     createItem() {
@@ -268,6 +271,7 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
                     message: 'Item created',
                     variant: 'success'
                 }));
+                console.log('Creating item:', JSON.stringify(this.newItem));
                 this.closeCreateItemModal();
                 this.fetchItems();
             })
