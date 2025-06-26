@@ -1,4 +1,16 @@
 public with sharing class ItemService {
+    public class PicklistEntryWrapper {
+        @AuraEnabled public String type;
+        @AuraEnabled public String label;
+        @AuraEnabled public String value;
+
+        public PicklistEntryWrapper(String type, String label, String value) {
+            this.type = type;
+            this.label = label;
+            this.value = value;
+        }
+    }
+
     @AuraEnabled(cacheable=true)
     public static List<Item__c> getItems() {
         return [
@@ -89,5 +101,48 @@ public with sharing class ItemService {
             System.debug('Error creating item: ' + e.getMessage());
             throw new AuraHandledException('Failed to create item: ' + e.getMessage());
         }
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<String> getAllItemTypes() {
+        Set<String> types = new Set<String>();
+        for (AggregateResult ar : [
+            SELECT Type__c
+            FROM Item__c
+            GROUP BY Type__c
+        ]) {
+            types.add((String)ar.get('Type__c'));
+        }
+        return new List<String>(types);
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<String> getAllItemFamilies() {
+        Set<String> families = new Set<String>();
+        for (AggregateResult ar : [
+            SELECT Family__c
+            FROM Item__c
+            GROUP BY Family__c
+        ]) {
+            families.add((String)ar.get('Family__c'));
+        }
+        return new List<String>(families);
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<PicklistEntryWrapper> loadPicklistValues() {
+        List<PicklistEntryWrapper> picklistValues = new List<PicklistEntryWrapper>();
+        
+        List<Schema.PicklistEntry> typePicklist = Schema.Item__c.Type__c.getDescribe().getPicklistValues();
+        for (Schema.PicklistEntry pe : typePicklist) {
+            picklistValues.add(new PicklistEntryWrapper('type', pe.getLabel(), pe.getValue()));
+        }
+        
+        List<Schema.PicklistEntry> familyPicklist = Schema.Item__c.Family__c.getDescribe().getPicklistValues();
+        for (Schema.PicklistEntry pe : familyPicklist) {
+            picklistValues.add(new PicklistEntryWrapper('family', pe.getLabel(), pe.getValue()));
+        }
+        
+        return picklistValues;
     }
 }

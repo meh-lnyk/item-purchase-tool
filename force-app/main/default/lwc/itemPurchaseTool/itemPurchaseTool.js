@@ -9,6 +9,7 @@ import checkoutCart from '@salesforce/apex/ItemService.checkoutCart';
 import USER_ID from '@salesforce/user/Id';
 import getUserIsManager from '@salesforce/apex/ItemService.getUserIsManager';
 import createItem from '@salesforce/apex/ItemService.createItem';
+import loadPicklistValues from '@salesforce/apex/ItemService.loadPicklistValues';
 
 export default class ItemPurchaseTool extends NavigationMixin(LightningElement) {
     @track items = [];
@@ -49,6 +50,7 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
         console.log('connectedCallback triggered');
         this.fetchItems();
         this.loadFamilies();
+        this.loadPicklistValues();
         this.checkManager();
     }
 
@@ -88,12 +90,10 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
     }
 
     loadFamilies() {
-        console.log('Calling loadFamilies...');
         getItemFamilies()
             .then(result => {
-                console.log('Fetched families:', result);
                 this.families = [...result];
-                this.familyOptions = result.map(fam => ({ label: fam, value: fam }));
+                //this.familyOptions = result.map(fam => ({ label: fam, value: fam }));
             })
             .catch(error => {
                 console.error('Error fetching families:', error);
@@ -284,5 +284,21 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
     handleFamilyFilterChange(event) {
         const newFamily = event.detail.value;
         this.applyFilters({ ...this.filters, family: newFamily });
+    }
+
+    loadPicklistValues() {
+        loadPicklistValues()
+            .then(result => {
+                this.typeOptions = result
+                    .filter(entry => entry.type === 'type')
+                    .map(entry => ({ label: entry.label, value: entry.value }));
+
+                this.familyOptions = result
+                    .filter(entry => entry.type === 'family')
+                    .map(entry => ({ label: entry.label, value: entry.value }));
+            })
+            .catch(error => {
+                console.error('Error loading picklist values:', error);
+            });
     }
 }
