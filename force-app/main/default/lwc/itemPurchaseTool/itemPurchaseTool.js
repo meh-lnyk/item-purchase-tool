@@ -55,18 +55,19 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
     fetchItems() {
         getItems()
             .then(result => {
-            this.items = result;
-            this.filteredItems = [...this.items];
+                this.items = result;
+                this.filteredItems = [...this.items];
+                console.log('Fetched items:', JSON.stringify(result, null, 2));
 
-            const typeSet = new Set();
-            this.items.forEach(item => {
-                if (item.Type__c) {
-                typeSet.add(item.Type__c);
-                }
-            });
-            this.filters.type = [...typeSet];
-            this.typeOptions = [...typeSet].map(type => ({ label: type, value: type }));
-            console.log('Fetched items:', result);
+                const typeSet = new Set();
+                this.items.forEach(item => {
+                    if (item.Type__c) {
+                    typeSet.add(item.Type__c);
+                    }
+                });
+                this.filters.type = [...typeSet];
+                this.typeOptions = [...typeSet].map(type => ({ label: type, value: type }));
+                console.log('Fetched items:', result);
             })
             .catch(error => {
                 console.error('Error loading account info:', JSON.stringify(error));
@@ -133,6 +134,8 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
                     variant: 'success'
                 })
             );
+        } else {
+            console.log('Failed to add item:', itemId);
         }
     }
 
@@ -180,25 +183,26 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
             return;
         }
 
-        const payload = this.cart.map(item => ({
-            itemId: item.Id,
-            unitCost: item.Price__c,
-            amount: 1
-        }));
+        const cartMap = this.cart.reduce((map, item) => {
+            if (!map[item.Id]) {
+                map[item.Id] = { itemId: item.Id, unitCost: item.Price__c, amount: 0 };
+            }
+            map[item.Id].amount += 1;
+            return map;
+        }, {});
+        const cartPayload = Object.values(cartMap);
 
-        const cartPayload = this.cart.map(item => ({
-            itemId: item.Id,
-            amount: 1,
-            unitCost: item.Price__c
-        }));
-        console.log('Calling checkoutCart with payload:', JSON.stringify(payload));
-        console.log('Cart:', JSON.stringify(this.cart));
-        checkoutCart({ accountId: this.accountId, items: cartPayload })
+        const params = {
+            accountId: this.accountId,
+            itemsJson: JSON.stringify(cartPayload)
+        };
+
+        checkoutCart(params)
             .then(purchaseId => {
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Success',
-                        message: 'Purchase created',
+                        message: 'Purchase created with ID: ' + purchaseId,
                         variant: 'success'
                     })
                 );
@@ -213,20 +217,15 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
                             actionName: 'view'
                         }
                     });
-                } else {
-                    console.warn('NavigationMixin.Navigate is not available.');
                 }
             })
             .catch(error => {
-                console.error('Checkout error (full object):', JSON.stringify(error));
-
                 let message = 'Unknown error';
                 if (error && error.body && error.body.message) {
                     message = error.body.message;
                 } else if (error && error.message) {
                     message = error.message;
                 }
-
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Checkout Failed',

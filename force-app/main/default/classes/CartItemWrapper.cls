@@ -1,5 +1,7 @@
 public class CartItemWrapper {
-    @AuraEnabled public Id ItemId;
-    @AuraEnabled public Decimal UnitCost;
-    @AuraEnabled public Integer Amount;
+    @AuraEnabled public Id itemId;
+    @AuraEnabled public Decimal unitCost;
+    @AuraEnabled public Integer amount;
+
+    public CartItemWrapper() {}
 }
