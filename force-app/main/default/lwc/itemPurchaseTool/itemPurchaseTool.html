@@ -152,25 +152,20 @@
                 <p class="slds-text-title_bold slds-m-bottom_small">Items listed: {filteredItems.length}</p>
 
                 <div class="slds-text-title_bold slds-m-bottom_x-small">Type</div>
-                <template if:true={filters.type}>
-                    <ul class="slds-list_dotted">
-                        <template for:each={filters.type} for:item="type">
-                            <li key={type}>{type}</li>
-                        </template>
-                    </ul>
-                </template>
+                <lightning-checkbox-group
+                    name="typeFilter"
+                    options={typeOptions}
+                    value={filters.type}
+                    onchange={handleTypeFilterChange}>
+                </lightning-checkbox-group>
 
                 <div class="slds-text-title_bold slds-m-bottom_x-small">Family</div>
-                <template if:true={families}>
-                    <ul class="slds-list_dotted">
-                        <template for:each={families} for:item="fam">
-                            <li key={fam}>{fam}</li>
-                        </template>
-                    </ul>
-                </template>
-                <template if:false={families}>
-                    <p>No families found.</p>
-                </template>
+                <lightning-checkbox-group
+                    name="familyFilter"
+                    options={familyOptions}
+                    value={filters.family}
+                    onchange={handleFamilyFilterChange}>
+                </lightning-checkbox-group>
             </div>
         </div>
     </lightning-card>
@@ -235,7 +230,6 @@
         </section>
         <div class="slds-backdrop slds-backdrop_open"></div>
     </template>
-
 
     <!-- ITEM DETAILS MODAL -->
     <template if:true={isDetailModalOpen}>

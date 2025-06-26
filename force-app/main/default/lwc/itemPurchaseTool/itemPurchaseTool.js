@@ -56,8 +56,6 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
         getItems()
             .then(result => {
                 this.items = result;
-                this.filteredItems = [...this.items];
-                console.log('Fetched items:', JSON.stringify(result, null, 2));
 
                 const typeSet = new Set();
                 this.items.forEach(item => {
@@ -65,9 +63,8 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
                     typeSet.add(item.Type__c);
                     }
                 });
-                this.filters.type = [...typeSet];
                 this.typeOptions = [...typeSet].map(type => ({ label: type, value: type }));
-                console.log('Fetched items:', result);
+                this.applyFilters(this.filters);
             })
             .catch(error => {
                 console.error('Error loading account info:', JSON.stringify(error));
@@ -277,5 +274,15 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
             .catch(error => {
                 console.error('Error creating item', error);
             });
+    }
+
+    handleTypeFilterChange(event) {
+        const newType = event.detail.value;
+        this.applyFilters({ ...this.filters, type: newType });
+    }
+
+    handleFamilyFilterChange(event) {
+        const newFamily = event.detail.value;
+        this.applyFilters({ ...this.filters, family: newFamily });
     }
 }
