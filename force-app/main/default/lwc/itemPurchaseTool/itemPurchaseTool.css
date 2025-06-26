@@ -1,3 +1,36 @@
+.header-bar {
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.header-bar lightning-button {
+    margin-right: 1rem;
+}
+
+.header-bar .slds-text-title {
+    margin-right: 1.5rem;
+}
+
+lightning-input[label="Search"] {
+    margin-bottom: 1.5rem;
+}
+
+.slds-text-title_bold {
+    margin-bottom: 0.25rem;
+}
+
+.filter-block {
+    margin-bottom: 1.5rem;
+}
+
+.filter-label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    font-size: 0.85rem;
+}
+
 .image-container {
     position: relative;
     width: 200px;

@@ -1,7 +1,7 @@
 <template>
     <lightning-card>
         <!-- HEADER -->
-        <div class="slds-grid slds-p-around_medium slds-border_bottom">
+        <div class="slds-grid slds-p-horizontal_large slds-p-vertical_medium slds-border_bottom header-bar">
             <lightning-button
                 label="Create Item"
                 variant="brand"
@@ -71,12 +71,14 @@
                 </section>
                 <div class="slds-backdrop slds-backdrop_open"></div>
             </template>
-            <template if:true={account}>
-                <div class="slds-text-title slds-m-right_medium">Account Name: {account.Name}</div>
-                <div class="slds-text-title slds-m-right_medium">Account Number: {account.AccountNumber}</div>
-                <div class="slds-text-title slds-m-right_auto">Industry: {account.Industry}</div>
-            </template>
-            <lightning-button label="Cart" variant="neutral" onclick={openCart}></lightning-button>
+            <div class="slds-grid slds-grow slds-grid_align-spread">
+                <template if:true={account}>
+                    <div class="slds-text-title slds-m-right_medium">Account Name: {account.Name}</div>
+                    <div class="slds-text-title slds-m-right_medium">Account Number: {account.AccountNumber}</div>
+                    <div class="slds-text-title slds-m-right_auto">Industry: {account.Industry}</div>
+                </template>
+                <lightning-button label="Cart" variant="neutral" onclick={openCart}></lightning-button>
+            </div>
         </div>
 
         <!-- MAIN BODY -->
@@ -148,24 +150,28 @@
             </div>
 
             <!-- FILTERS -->
-            <div class="slds-size_1-of-4 slds-p-right_medium slds-border_right">
+            <div class="slds-size_1-of-4 slds-p-left_medium slds-p-right_medium slds-border_right">
                 <p class="slds-text-title_bold slds-m-bottom_small">Items listed: {filteredItems.length}</p>
 
-                <div class="slds-text-title_bold slds-m-bottom_x-small">Type</div>
-                <lightning-checkbox-group
-                    name="typeFilter"
-                    options={typeOptions}
-                    value={filters.type}
-                    onchange={handleTypeFilterChange}>
-                </lightning-checkbox-group>
+                <div class="filter-block">
+                    <label class="filter-label">Type</label>
+                    <lightning-checkbox-group
+                        name="typeFilter"
+                        options={typeOptions}
+                        value={filters.type}
+                        onchange={handleTypeFilterChange}>
+                    </lightning-checkbox-group>
+                </div>
 
-                <div class="slds-text-title_bold slds-m-bottom_x-small">Family</div>
-                <lightning-checkbox-group
-                    name="familyFilter"
-                    options={familyOptions}
-                    value={filters.family}
-                    onchange={handleFamilyFilterChange}>
-                </lightning-checkbox-group>
+                <div class="filter-block">
+                    <label class="filter-label">Family</label>
+                    <lightning-checkbox-group
+                        name="familyFilter"
+                        options={familyOptions}
+                        value={filters.family}
+                        onchange={handleFamilyFilterChange}>
+                    </lightning-checkbox-group>
+                </div>
             </div>
         </div>
     </lightning-card>
