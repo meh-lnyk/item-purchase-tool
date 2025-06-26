@@ -43,7 +43,7 @@ public with sharing class ItemService {
 
         Integer totalItems = 0;
         Decimal grandTotal = 0;
-        Purchase__c purchase = new Purchase__c(ClientId__c = accountId);
+        Purchase__c purchase = new Purchase__c(ClientId__c = accountId, TotalItems__c = 0, GrandTotal__c = 0);
         insert purchase;
 
         List<PurchaseLine__c> lines = new List<PurchaseLine__c>();
